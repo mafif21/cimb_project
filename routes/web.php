@@ -9,7 +9,7 @@ Route::get('/', function () {
     return view('dashboard.index');
 });
 
-Route::middleware('admin')->name('admin.')->prefix('admin')->group(function () {
+Route::middleware('auth')->name('admin.')->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
     Route::resource('/branch', BranchController::class);
 });
