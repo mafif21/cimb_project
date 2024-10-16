@@ -35,18 +35,9 @@
             </div>
             <nav :class="{ 'block': open, 'hidden': !open }"
                 class="flex-grow px-4 pb-4 md:block md:pb-0 md:overflow-y-auto">
-                {{-- <x-admin-nav-link :href="route('admin.menu.index')" :active="request()->routeIs('admin.menu**')">
-                            {{ __('Menu') }}
-                        </x-admin-nav-link>
-                        <x-admin-nav-link :href="route('admin.category.index')" :active="request()->routeIs('admin.category**')">
-                            {{ __('Categories') }}
-                        </x-admin-nav-link>
-                        <x-admin-nav-link :href="route('admin.table.index')" :active="request()->routeIs('admin.table**')">
-                            {{ __('Tables') }}
-                        </x-admin-nav-link>
-                        <x-admin-nav-link :href="route('admin.reservation.index')" :active="request()->routeIs('admin.reservation**')">
-                            {{ __('Reservations') }}
-                        </x-admin-nav-link> --}}
+                <x-admin-nav-link :href="route('admin.branch.index')" :active="request()->routeIs('admin.branch**')">
+                    {{ __('Branch') }}
+                </x-admin-nav-link>
 
                 <div @click.away="open = false" class="relative" x-data="{ open: false }">
                     <button @click="open = !open"
@@ -94,7 +85,7 @@
     </div>
 
     <script src="https://unpkg.com/flowbite@1.5.5/dist/flowbite.js"></script>
-    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>

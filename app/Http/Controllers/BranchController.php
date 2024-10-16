@@ -10,18 +10,15 @@ class BranchController extends Controller
     public function index()
     {
         $branches = Branch::all();
-        return view('admin.menu.index', compact('menus'));
+        return view('admin.branch.index', compact('branches'));
     }
 
     public function create()
     {
-        //
+        return view('admin.branch.create');
     }
 
-    public function store(Request $request)
-    {
-        //
-    }
+    public function store(Request $request) {}
 
     public function show(Branch $branch)
     {
