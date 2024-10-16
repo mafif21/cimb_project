@@ -54,6 +54,7 @@
         "fast-glob": "^3.3.2",
         "fastq": "^1.17.1",
         "fill-range": "^7.1.1",
+        "flowbite": "^2.5.2",
         "follow-redirects": "^1.15.9",
         "foreground-child": "^3.3.0",
         "form-data": "^4.0.1",
