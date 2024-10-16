@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Branch extends Model
+class Category extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
-    public function category()
+    public function branch(): HasOne
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasOne(Branch::class);
     }
 }
