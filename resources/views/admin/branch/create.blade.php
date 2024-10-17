@@ -19,7 +19,7 @@
 
                 <div id="map" class="h-[150px] mb-8"></div>
 
-                <form method="post" action="{{ route('admin.branch') }}">
+                <form method="post" action="{{ route('admin.branch.store') }}">
                     @csrf
                     <div class="grid grid-cols-3 gap-4 mb-4">
                         <div>
@@ -42,9 +42,13 @@
                         <div>
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 font-semibold">Category</label>
-                            <input type="text" id="category" name="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cimb-maroon focus:border-cimb-maroon block w-full p-3 "
-                                placeholder="office category" value="{{ old('category') }}">
+                            <select id="category"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cimb-light focus:border-cimb-light block w-full p-2.5"
+                                name="category_id">
+                                @foreach ($categories as $category)
+                                    <option value={{ $category->id }}>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
                             <x-input-error :messages="$errors->get('category')" class="mt-2" />
                         </div>
                     </div>
@@ -85,16 +89,16 @@
                             <label for="latitude"
                                 class="block mb-2 text-sm font-medium text-gray-900 font-semibold">Latitude</label>
                             <input type="text" id="latitude" name="latitude"
-                                class="bg-gray-50 cursor-not-allowed border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cimb-maroon focus:border-cimb-maroon block w-full p-3 "
-                                placeholder="latitude" value="{{ old('latitude') }}" readonly>
+                                class="bg-gray-50  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cimb-maroon focus:border-cimb-maroon block w-full p-3 "
+                                placeholder="latitude" value="{{ old('latitude') }}">
                             <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
                         </div>
                         <div>
                             <label for="longitude"
                                 class="block mb-2 text-sm font-medium text-gray-900 font-semibold">Longitude</label>
                             <input type="text" id="longitude" name="longitude"
-                                class="bg-gray-50 cursor-not-allowed border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cimb-maroon focus:border-cimb-maroon block w-full p-3 "
-                                placeholder="office days open" value="{{ old('longitude') }}" readonly>
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cimb-maroon focus:border-cimb-maroon block w-full p-3 "
+                                placeholder="office days open" value="{{ old('longitude') }}">
                             <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
                         </div>
                     </div>

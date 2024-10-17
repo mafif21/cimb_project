@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BranchCreateRequest;
 use App\Http\Requests\BranchUpdateRequest;
 use App\Models\Branch;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
@@ -17,13 +18,24 @@ class BranchController extends Controller
 
     public function create()
     {
-        return view('admin.branch.create');
+        $categories = Category::all();
+        return view('admin.branch.create', compact('categories'));
     }
 
-    public function store(BranchCreateRequest $request)
+    public function store(Request $request)
     {
-        dd($request);
-        Branch::create($request->validated());
+        $validatedData = $request->validate([
+            'name' => 'required|string|min:2|max:100',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|min:5|max:255',
+            'days_open' => 'required',
+            'hours_open' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        Branch::create($validatedData);
         return to_route('admin.branch.index')->with('success', 'Add Branch Success');
     }
 
