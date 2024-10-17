@@ -50,9 +50,21 @@ class BranchController extends Controller
         return view('admin.branch.edit', compact('branch', 'categories'));
     }
 
-    public function update(BranchUpdateRequest $request, Branch $branch)
+    public function update(Request $request, Branch $branch)
     {
-        $branch->update($request->validated());
+        ddd($request);
+        $validatedData = $request->validate([
+            'name' => 'required|string|min:2|max:100',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|min:5|max:255',
+            'days_open' => 'required',
+            'hours_open' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        $branch->update($validatedData);
         return redirect()->route('admin.branch.index')->with('success', 'Cabang berhasil diperbarui.');
     }
 

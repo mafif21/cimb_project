@@ -43,7 +43,7 @@
                             <label for="category"
                                 class="block mb-2 text-sm font-medium text-gray-900 font-semibold">Category</label>
                             <select id="category"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cimb-light focus:border-cimb-light block w-full p-2.5"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cimb-maroon focus:border-cimb-light block w-full p-2.5"
                                 name="category_id">
                                 @foreach ($categories as $category)
                                     <option value={{ $category->id }}>{{ $category->name }}</option>
