@@ -103,9 +103,12 @@
                         </div>
                     </div>
 
-                    <button type="submit"
-                        class="text-white bg-cimb-light hover:bg-cimb-maroon focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Add
-                        Category</button>
+                    <div class="flex w-full">
+                        <button type="submit"
+                            class="text-white block bg-cimb-light hover:bg-cimb-maroon focus:ring-4 focus:outline-none font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center">
+                            Add Category
+                        </button>
+                    </div>
                 </form>
 
             </div>
