@@ -6,46 +6,6 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <style>
-            /* body, html {
-                height: 100%;
-            } */
-
-            /* .leaflet-popup   {
-                bottom: 20px !important;
-                left: 20px !important;
-            } */
-
-            /* Default style for the marker icon */
-            .leaflet-marker-icon {
-                transition: transform 0.3s ease; /* Animasi perubahan ukuran */
-            }
-
-            /* Membesar saat popup terbuka */
-            .marker-enlarged {
-                box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-                animation: pulse 2s infinite;
-                border-radius: 50px;
-            }
-
-            .leaflet-popup-content-wrapper {
-                border-radius: 5px;
-            }
-
-            @keyframes pulse {
-                0% {
-                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-                }
-
-                70% {
-                    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-                }
-
-                100% {
-                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-                }
-            }
-        </style>
     </x-slot>
 
     <x-slot name="slot">
@@ -61,7 +21,7 @@
                             <select name="category_id" id="category_id" class="w-[150px] rounded-l-md" required>
                                 <option value="Pilih Kategori" disabled>Pilih Kategori</option>
                                 @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}" {{ $category->id == 4 ? 'selected' : '' }}>{{ $category->name }}</option>
                                 @endforeach
                             </select>
                             <div class="relative w-full">
@@ -111,9 +71,16 @@
                     shadowSize: [41, 41] // size of the shadow
                 });
 
+                const blueIcon = L.icon({
+                    iconUrl: '{{ asset("images/3754313.png") }}', // Use a red marker image
+                    iconSize: [41, 41], // size of the icon
+                    shadowSize: [41, 41] // size of the shadow
+                });
+
                 const markersLayer = new L.LayerGroup();
                 let markers = {};
                 let html = '';
+                let user_marker = null;
                 function addMarkersToMap(branches) {
                     const locationCoords = [];
                     for(const i in branches) {
@@ -131,7 +98,7 @@
                         }
                         let url_direction = `https://www.google.com/maps/dir/?api=1${paramOrigin}&destination=${destLat},${destLong}`;
                 
-                        markers[branch.id].bindPopup(`<b>${branch.name}</b><br>Alamat: ${branch.address} <br>Hari: ${branch.days_open}<br>Jam Buka: ${branch.hours_open} <br><br> <a href="${url_direction}" target="_blank">Direction</a>`);
+                        markers[branch.id].bindPopup(`<b>${branch.name}</b><br><br>${branch.address} <br><br>Hari: ${branch.days_open}<br>Jam Buka: ${branch.hours_open} <br><br> <a href="${url_direction}" target="_blank">Direction</a>`);
                     
                         markers[branch.id].on('popupopen', function() {
                             var markerIcon = markers[branch.id]._icon;
@@ -152,24 +119,33 @@
                     // markers.length = 0;
                     markersLayer.addTo(map);
                     document.getElementById('branches-list').innerHTML = html;
+                    displayLoading(false);
                 }
 
-                function searchLocation() {
-                    const search = document.getElementById('input-search').value;
+                function searchLocation(init = false, userCordinate = null) {
+                    const search = init ? 'Tangerang' : document.getElementById('input-search').value;
                     const category_id = document.getElementById('category_id').value;
-                    if (search.length < 3) {
-                        alert('Minimal 3 Karakter');
-                        return;
+                    let user_lat = '';
+                    let user_long = '';
+                    if (userCordinate) {
+                        user_lat = userCordinate.user_lat;
+                        user_long = userCordinate.user_long;
+                    } else {
+                        if (search.length < 3) {
+                            alert('Minimal 3 Karakter');
+                            return;
+                        }
                     }
                     if (category_id == '') {
                         alert('Kategori tidak boleh kosong')
                         return;
                     }
+                    displayLoading(true);
                     resetMap();
-                    axios.get('{{ route("api.branches") }}', { params: {category_id: category_id, search: search} }).then((resp) => {
+                    axios.get('{{ route("api.branches") }}', { params: {category_id: category_id, search: search, user_lat: user_lat, user_long: user_long} }).then((resp) => {
                         if (resp.data.data.length > 0) {
                             addMarkersToMap(resp.data.data)
-                        } else {
+                        } else if(!init) {
                             document.getElementById('branches-list').innerHTML = '<p class="text-red-600">Tempat tidak ditemukan</p>';
                         }
                     }).catch((e) => {
@@ -240,10 +216,9 @@
                 function showPosition(position) {
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
-                    originLat = latitude;
-                    originLong = longitude;
-                    alert("Latitude: " + latitude + ", Longitude: " + longitude);
-                    // You can also display the coordinates or use them in your application
+                    user_marker = L.marker([latitude, longitude], { icon: blueIcon }).addTo(map);
+                    searchLocation(false, {user_lat: latitude, user_long: longitude});
+                    
                 }
 
                 function showError(error) {
@@ -262,6 +237,16 @@
                             break;
                     }
                 }
+
+                function displayLoading(show) {
+                    if (show) {
+                        document.getElementById('loading').style.display = 'flex';
+                    } else {
+                        document.getElementById('loading').style.display = 'none';
+                    }
+                }
+
+                searchLocation(true);
 
             </script>
     </x-slot>

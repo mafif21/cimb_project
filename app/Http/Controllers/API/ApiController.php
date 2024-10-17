@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Category;
+use Location\Coordinate;
+use Location\Distance\Vincenty;
 
 class ApiController extends Controller
 {
@@ -19,18 +21,35 @@ class ApiController extends Controller
         }
         $branches = Branch::query();
         
-        if ($request->category_id) {
+        if (!empty($request->category_id)) {
             $branches->where('category_id', $request->category_id);
         }
-        if ($request->search) {
+        if (!empty($request->search)) {
             $branches->where('name', 'like', '%'.$request->search.'%')
-            ->orWhere('address', 'like', '%'.$request->search.'%')
-            ->orWhere('phone', 'like', '%'.$request->search.'%');
+                ->orWhere('address', 'like', '%'.$request->search.'%')
+                ->orWhere('phone', 'like', '%'.$request->search.'%');
         }
+
+        $branches = $branches->get();
+
+        if (!empty($request->user_lat && !empty($request->user_long))) {
+            $originCordinate = new Coordinate($request->user_lat, $request->user_long);
+            $range = 10000;
+            $data = [];
+            foreach($branches as $branch) {
+                $branchCordinate = new Coordinate($branch->latitude, $branch->longitude);
+                $distance = $originCordinate->getDistance($branchCordinate, new Vincenty());
+                if ($distance <= $range) {
+                    $data[] = $branch;
+                }
+            }
+            $branches = $data;
+        }
+
         return response()->json([
             'status' => 200,
             'message' => 'success',
-            'data' => $branches->get(),
+            'data' => $branches,
         ]);
     }
 }
