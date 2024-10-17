@@ -22,7 +22,7 @@ class BranchController extends Controller
 
     public function store(BranchCreateRequest $request)
     {
-        // ddd($request);
+        dd($request);
         Branch::create($request->validated());
         return to_route('admin.branch.index')->with('success', 'Add Branch Success');
     }

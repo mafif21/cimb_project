@@ -19,7 +19,7 @@
 
                 <div id="map" class="h-[150px] mb-8"></div>
 
-                <form method="post" action="{{ route('admin.branch.store') }}">
+                <form method="post" action="{{ route('admin.branch') }}">
                     @csrf
                     <div class="grid grid-cols-3 gap-4 mb-4">
                         <div>
