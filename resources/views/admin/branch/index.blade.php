@@ -14,7 +14,7 @@
                 <caption class="p-5 text-lg font-semibold text-left text-gray-900 ">
                     Admin Branch Page
                     <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">Halo
-                        {{ auth()->user()->name }} salam EPICC, silahkan tambah, edit, hapus cabang CimbNiaga yang ada
+                        {{ auth()->user()->name }} salam EPICC, silahkan tambah, edit, hapus cabang CIMB Niaga yang ada
                         di Indonesia</p>
                 </caption>
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
