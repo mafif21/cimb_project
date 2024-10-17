@@ -21,5 +21,25 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
             'password' => Hash::make("password"),
         ]);
+
+        $categories = [
+            'Atm (Tarik Tunai)',
+            'Cdm (Setor Tunai)',
+            'Tst (Tarik dan Setor Tunai)',
+            'Main Branch (KC)',
+            'Digital Lounge (KCP)',
+            'Sub Branch (KCP)',
+            'Kiosk',
+            'Syariah Main Branch (KCS)',
+            'Kantor Fungsional Syariah (KFS)',
+            'Syariah Sub Branch (KCPS)',
+            'Weekend Banking'
+        ];
+
+        foreach ($categories as $category) {
+            \App\Models\Category::create([
+                'name' => ucfirst($category)
+            ]);
+        }
     }
 }
