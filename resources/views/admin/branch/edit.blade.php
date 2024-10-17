@@ -17,7 +17,7 @@
                     </p>
                 </div>
 
-                <div id="map" class="h-[150px] mb-8"></div>
+                <div id="map" class="h-[250px] mb-8"></div>
 
                 <form method="POST" action="{{ route('admin.branch.update', $branch->id) }}">
                     @method('PUT')
@@ -130,31 +130,48 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            map.on('click', function(e) {
-                var latOrigin = e.latlng.lat;
-                var lngOrigin = e.latlng.lng;
+            // map.on('click', function(e) {
+            //     var latOrigin = e.latlng.lat;
+            //     var lngOrigin = e.latlng.lng;
 
-                document.getElementById('latitude').value = latOrigin;
-                document.getElementById('longitude').value = lngOrigin;
+            //     document.getElementById('latitude').value = latOrigin;
+            //     document.getElementById('longitude').value = lngOrigin;
 
-                L.popup()
-                    .setLatLng(e.latlng)
-                    .setContent("Latitude: " + lat + "<br>Longitude: " + lng)
-                    .openOn(map);
-            });
+            //     L.popup()
+            //         .setLatLng(e.latlng)
+            //         .setContent("Latitude: " + lat + "<br>Longitude: " + lng)
+            //         .openOn(map);
+            // });
 
+            
             var redIcon = L.icon({
                 iconUrl: '{{ asset('images/663342.png') }}',
                 iconSize: [41, 41],
                 shadowSize: [41, 41]
             });
-
-            L.marker([lat, long], {
-                icon: redIcon
+            
+            var marker = new L.marker([lat, long], {
+                icon: redIcon,
+                draggable: true,
             }).addTo(map);
-
-            marker.on('click', function() {
-                map.setView([lat, long], 18);
+            
+            map.on('click', function(e) {
+                var position = e.latlng;
+                marker.setLatLng(new L.LatLng(position.lat, position.lng), {
+                    draggable: 'true'
+                });
+                map.panTo(new L.LatLng(position.lat, position.lng));
+                document.getElementById('latitude').value = position.lat;
+                document.getElementById('longitude').value = position.lng;
+            });
+            marker.on('dragend', function(event) {
+                var position = marker.getLatLng();
+                marker.setLatLng(new L.LatLng(position.lat, position.lng), {
+                    draggable: 'true'
+                });
+                map.panTo(new L.LatLng(position.lat, position.lng))
+                document.getElementById('latitude').value = position.lat;
+                document.getElementById('longitude').value = position.lng;
             });
         </script>
     </x-slot>

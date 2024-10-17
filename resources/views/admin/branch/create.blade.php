@@ -120,14 +120,20 @@
             integrity="sha512-djRf8Q5f5s/TNz/tLD9gZp3p2hkHvf0Sb1CO8t3hKmY8/diIcdUnP3cwPEqU7APLiRYf2zp8HM7mNpUYYa0XrA=="
             crossorigin=""></script>
         <script>
-            var map = L.map('map').setView([-6.273122179799894, 106.72426229926083], 13);
-
+            var map = L.map('map').setView([-6.273122179799894, 106.72426229926083], 17);
+            var redIcon = L.icon({
+                iconUrl: '{{ asset('images/663342.png') }}',
+                iconSize: [41, 41],
+                shadowSize: [41, 41]
+            });
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             var marker = new L.marker([-6.273122179799894, 106.72426229926083], {
+                icon: redIcon,
                 draggable: true
             }).addTo(map);
+
 
             marker.on('dragend', function(event) {
                 var position = marker.getLatLng();
