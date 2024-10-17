@@ -49,44 +49,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="bg-white border-b hover:bg-gray-200">
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                            Bintaro
-                        </th>
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-wrap">
-                            Grand Niaga II, Jl. Wahid Hasyim No.3 Blok B4, Pd. Jaya, Kec. Pd. Aren, Kota Tangerang
-                            Selatan, Banten 15224
-                        </th>
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-wrap">
-                            083749936
-                        </th>
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                            Monday - Friday
-                        </th>
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                            09.00 - 17.00
-                        </th>
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                            -6.273072
-                        </th>
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                            106.724285
-                        </th>
-                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                            Kantor Pusat
-                        </th>
-                        <td class="py-4 px-6">
-                            <div class="flex gap-4 items-center">
-                                <a href="{{ route('admin.branch.edit', 1) }}" class="font-medium text-blue-600">Edit</a>
-                                <form action="{{ route('admin.branch.destroy', 1) }}" method="post"
-                                    onsubmit="return confirm('Are you sure?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="font-medium text-red-600">Delete</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
+                    @foreach ($branches as $branch)
+                        <tr class="bg-white border-b hover:bg-gray-200">
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                                {{ $branch->name }}
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-wrap">
+                                {{ $branch->address }}
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-wrap">
+                                {{ $branch->phone }}
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                                {{ $branch->days_open }}
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                                {{ $branch->hours_open }}
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                                {{ $branch->langitude }}
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                                {{ $branch->longitude }}
+                            </th>
+                            <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                                {{ $branch->category->name }}
+                            </th>
+                            <td class="py-4 px-6">
+                                <div class="flex gap-4 items-center">
+                                    <a href="{{ route('admin.branch.edit', 1) }}"
+                                        class="font-medium text-blue-600">Edit</a>
+                                    <form action="{{ route('admin.branch.destroy', 1) }}" method="post"
+                                        onsubmit="return confirm('Are you sure?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="font-medium text-red-600">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
