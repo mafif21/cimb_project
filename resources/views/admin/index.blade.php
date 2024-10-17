@@ -14,14 +14,14 @@
 
         <!-- Total Orders Card -->
         <div class="p-4 bg-white rounded-lg shadow-md">
-            <h3 class="text-sm font-medium text-gray-500">Total Orders</h3>
-            <p class="mt-1 text-3xl font-semibold text-gray-900">{{ $data['totalOrders'] }}</p>
+            <h3 class="text-sm font-medium text-gray-500">Total ATM</h3>
+            <p class="mt-1 text-3xl font-semibold text-gray-900">{{ $data['totalATM'] }}</p>
         </div>
 
         <!-- Total Revenue Card -->
         <div class="p-4 bg-white rounded-lg shadow-md">
-            <h3 class="text-sm font-medium text-gray-500">Total Revenue</h3>
-            <p class="mt-1 text-3xl font-semibold text-gray-900">${{ number_format($data['revenue'], 2) }}</p>
+            <h3 class="text-sm font-medium text-gray-500">Total CDM</h3>
+            <p class="mt-1 text-3xl font-semibold text-gray-900">{{ $data['totalCDM'] }}</p>
         </div>
 
         <!-- Products Sold Card -->

@@ -16,6 +16,8 @@ class AdminController extends Controller
             'revenue' => 25000,
             'productsSold' => 1280,
             'totalBranches' => Branch::count(),
+            'totalATM' => Branch::where('category_id', 1)->count(),
+            'totalCDM' => Branch::where('category_id', 2)->count(),
         ];
         return view('admin.index', compact('data'));
     }
