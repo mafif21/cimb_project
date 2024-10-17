@@ -1,50 +1,51 @@
 <x-app-layout>
-    <x-slot name="title">Home</x-slot>
+    <x-slot name="title">Lokasi CIMB Niaga</x-slot>
     <x-slot name="additional">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-            <style>
-                /* body, html {
-                    height: 100%;
-                } */
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <style>
+            /* body, html {
+                height: 100%;
+            } */
 
-                /* .leaflet-popup   {
-                    bottom: 20px !important;
-                    left: 20px !important;
-                } */
+            /* .leaflet-popup   {
+                bottom: 20px !important;
+                left: 20px !important;
+            } */
 
-                /* Default style for the marker icon */
-                .leaflet-marker-icon {
-                    transition: transform 0.3s ease; /* Animasi perubahan ukuran */
+            /* Default style for the marker icon */
+            .leaflet-marker-icon {
+                transition: transform 0.3s ease; /* Animasi perubahan ukuran */
+            }
+
+            /* Membesar saat popup terbuka */
+            .marker-enlarged {
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+                animation: pulse 2s infinite;
+                border-radius: 50px;
+            }
+
+            .leaflet-popup-content-wrapper {
+                border-radius: 5px;
+            }
+
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
                 }
 
-                /* Membesar saat popup terbuka */
-                .marker-enlarged {
-                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
-                    animation: pulse 2s infinite;
-                    border-radius: 50px;
+                70% {
+                    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
                 }
 
-                .leaflet-popup-content-wrapper {
-                    border-radius: 5px;
+                100% {
+                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
                 }
-
-                @keyframes pulse {
-                    0% {
-                        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
-                    }
-
-                    70% {
-                        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-                    }
-
-                    100% {
-                        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-                    }
-                }
-            </style>
+            }
+        </style>
     </x-slot>
 
     <x-slot name="slot">
@@ -57,8 +58,8 @@
                     <form id="form-search" class="mx-auto">
                         <div class="flex">
                             <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only">Lokasi</label>
-                            <select name="category_id" id="category_id" class="w-[150px] rounded-l-md">
-                                <option value="Pilih Kategori" selected disable>Pilih Kategori</option>
+                            <select name="category_id" id="category_id" class="w-[150px] rounded-l-md" required>
+                                <option value="Pilih Kategori" disabled>Pilih Kategori</option>
                                 @foreach($categories as $cateogry)
                                 <option value="{{ $cateogry->id }}">{{ $cateogry->name }}</option>
                                 @endforeach
@@ -77,43 +78,7 @@
                             </button>
                         </div>
                     </form>
-                    <div class="mt-4 overflow-y-auto h-[250px] md:h-[73vh]">
-                        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow">
-                            <a href="#">
-                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Noteworthy technology acquisitions 2021</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-                            <a href="#" onclick="focusOn(1)" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300">
-                                Read more
-                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                </svg>
-                            </a>
-                        </div>
-                        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow">
-                            <a href="#">
-                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Noteworthy technology acquisitions 2021</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-                            <a href="#" onclick="focusOn(2)" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300">
-                                Read more
-                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                </svg>
-                            </a>
-                        </div>
-                        <div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow">
-                            <a href="#">
-                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Noteworthy technology acquisitions 2021</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
-                            <a href="#" onclick="focusOn(3)" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300">
-                                Read more
-                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                                </svg>
-                            </a>
-                        </div>
+                    <div id="branches-list" class="mt-4 overflow-y-auto h-[250px] md:h-[73vh]">
                     </div>
                 </div>
 
@@ -131,12 +96,11 @@
             integrity="sha512-djRf8Q5f5s/TNz/tLD9gZp3p2hkHvf0Sb1CO8t3hKmY8/diIcdUnP3cwPEqU7APLiRYf2zp8HM7mNpUYYa0XrA=="
             crossorigin=""></script>
             <script>
+                
                 let originLat = 0;
                 let originLong = 0;
                 var map = L.map('map').setView([ -6.200000, 106.816666], 12);
-                // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    
                     maxZoom: 19,
                     // attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
                 }).addTo(map);
@@ -147,38 +111,16 @@
                     shadowSize: [41, 41] // size of the shadow
                 });
 
-                // TODO: 
-                // const branches = [
-                //     {id: 1, name: 'KCU Monas', lat: -6.186804352256971, long: 106.82341848860942},
-                //     {id: 2, name: 'ATM Ragunan', lat: -6.30131770918271, long: 106.81945865323401},
-                //     {id: 3, name: 'KP Puter I', lat: -6.270209835189249, long: 106.72973875224473},
-                // ];
-
                 const markersLayer = new L.LayerGroup();
-                const markers = {};
-
-                function addMarkersToMap(a = false) {
-                    let branches = [
-                        {id: 1, name: 'KCU Monas', lat: -6.186804352256971, long: 106.82341848860942},
-                        {id: 2, name: 'ATM Ragunan', lat: -6.30131770918271, long: 106.81945865323401},
-                        {id: 3, name: 'KP Puter I', lat: -6.270209835189249, long: 106.72973875224473},
-                    ];
-
-                    // test
-                    if (a) {
-                        branches = [
-                            {id: 1, name: 'Gedung Sate', lat: -6.9018627528248375, long: 107.61815411957087}, 
-                            {id: 2, name: 'Braga', lat: -6.915482673997068, long: 107.608973376}, 
-                            {id: 3, name: 'Sport Jabar', lat: -6.91208615176044, long: 107.67255327349277}, 
-                        ];
-                    }
-
+                let markers = {};
+                let html = '';
+                function addMarkersToMap(branches) {
                     const locationCoords = [];
                     for(const i in branches) {
-            
                         const branch = branches[i];
-                        const destLat = branch.lat;
-                        const destLong = branch.long;
+                        console.log(branch)
+                        const destLat = branch.latitude;
+                        const destLong = branch.longitude;
                         locationCoords.push([destLat, destLong]);
                         // markers[branch.id] = L.marker([destLat, destLong], { icon: redIcon }).addTo(map);
                         markers[branch.id] = L.marker([destLat, destLong], { icon: redIcon });
@@ -189,7 +131,7 @@
                         }
                         let url_direction = `https://www.google.com/maps/dir/?api=1${paramOrigin}&destination=${destLat},${destLong}`;
                 
-                        markers[branch.id].bindPopup(`<b>KCU BCA</b><br>Jam Buka: 182312. <br><br> <a href="${url_direction}" target="_blank">Direction</a>`);
+                        markers[branch.id].bindPopup(`<b>${branch.name}</b><br>Alamat: ${branch.address} <br>Hari: ${branch.days_open}<br>Jam Buka: ${branch.hours_open} <br><br> <a href="${url_direction}" target="_blank">Direction</a>`);
                     
                         markers[branch.id].on('popupopen', function() {
                             var markerIcon = markers[branch.id]._icon;
@@ -202,35 +144,67 @@
                         });
             
                         markersLayer.addLayer(markers[branch.id]); 
+                        html += generateList(branch);
                     }
                     
                     var bounds = new L.latLngBounds(locationCoords);
                     map.fitBounds(bounds);
-                    markers.length = 0;
-                    markersLayer.addTo(map)
-
+                    // markers.length = 0;
+                    markersLayer.addTo(map);
+                    document.getElementById('branches-list').innerHTML = html;
                 }
-                // TEST:
-                addMarkersToMap();
 
-
-
-                // marker.on('click',  (e) => {
-                //     console.log(e)
-                // })
-
-
-                // TODO: manggil API
                 function searchLocation() {
-                    const input = document.getElementById('input-search').value;
-                    if (input.length < 3) return;
+                    const search = document.getElementById('input-search').value;
+                    const category_id = document.getElementById('category_id').value;
+                    if (search.length < 3) {
+                        alert('Minimal 3 Karakter');
+                        return;
+                    }
+                    if (category_id == '') {
+                        alert('Kategori tidak boleh kosong')
+                        return;
+                    }
+                    axios.get('{{ route("api.branches") }}', { params: {category_id: category_id, search: search} }).then((resp) => {
+                        resetMap();
+                        if (resp.data.data.length > 0) {
+                            addMarkersToMap(resp.data.data)
+                        } else {
+                            document.getElementById('branches-list').innerHTML = '<p class="text-red-600">Tempat tidak ditemukan</p>';
+                        }
+                    }).catch((e) => {
+                        alert(e.response)
+                        console.error(e)
+                    });
+                    
+                }
 
-                    console.log(input)
+                function generateList(branch) {
+                    const html = `<div class="mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow">
+                            <a href="#">
+                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">${branch.name}</h5>
+                            </a>
+                            <p class="mb-3 font-normal text-gray-700">
+                                ${branch.address}
+                            </p>
+                            <p class="mb-3 font-normal text-gray-700">
+                                Hari: ${branch.days_open}
+                            </p>
+                            <p class="mb-3 font-normal text-gray-700">
+                                Jam Buka: ${branch.hours_open}
+                            </p>
+                            <a href="#" onclick="focusOn(${branch.id})" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300">
+                                Lihat Lokasi
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                </svg>
+                            </a>
+                        </div>`;
+                    return html;
                 }
 
                 document.getElementById('input-search').addEventListener('keyup', (e) => {
-                    
-                    searchLocation();
+                    // searchLocation();
                 });
                 document.getElementById('form-search').addEventListener('submit', (e) => {
                     e.preventDefault();
@@ -241,24 +215,13 @@
                     getLocationUser();
                 });
 
-                document.getElementById('form-search').addEve
-
-                // map.on('click', function(e) {
-                //     console.log(e)
-                //     // https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=47.217954&lon=-1.552918
-                //     alert("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
-                // });
-
-            
-
-                
                 function focusOn(id) {
-                    // markers[city].openPopup();
                     markers[id].openPopup();
                 }
 
-                function removeAllMarkers() {
-                    
+                function resetMap() {
+                    markers = {};
+                    document.getElementById('branches-list').innerHTML = '';
                     markersLayer.clearLayers();
                 }
 
