@@ -17,7 +17,7 @@
                     </p>
                 </div>
 
-                <div id="map" class="h-[150px] mb-8"></div>
+                <div id="map" class="h-[250px] mb-8"></div>
 
                 <form method="post" action="{{ route('admin.branch.store') }}">
                     @csrf
@@ -117,24 +117,33 @@
             integrity="sha512-djRf8Q5f5s/TNz/tLD9gZp3p2hkHvf0Sb1CO8t3hKmY8/diIcdUnP3cwPEqU7APLiRYf2zp8HM7mNpUYYa0XrA=="
             crossorigin=""></script>
         <script>
-            var map = L.map('map').setView([-6.914744, 107.609810], 13);
+            var map = L.map('map').setView([-6.273122179799894, 106.72426229926083], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
+            var marker = new L.marker([-6.273122179799894, 106.72426229926083], {
+                draggable: true
+            }).addTo(map);
 
-            map.on('click', function(e) {
-                var lat = e.latlng.lat;
-                var lng = e.latlng.lng;
-
-                document.getElementById('latitude').value = lat;
-                document.getElementById('longitude').value = lng;
-
-                L.popup()
-                    .setLatLng(e.latlng)
-                    .setContent("Latitude: " + lat + "<br>Longitude: " + lng)
-                    .openOn(map);
+            marker.on('dragend', function(event) {
+                var position = marker.getLatLng();
+                marker.setLatLng(new L.LatLng(position.lat, position.lng), {
+                    draggable: 'true'
+                });
+                map.panTo(new L.LatLng(position.lat, position.lng))
+                document.getElementById('latitude').value = position.lat;
+                document.getElementById('longitude').value = position.lng;
             });
+            map.on('click', function(e) {
+        var position = e.latlng;
+        marker.setLatLng(new L.LatLng(position.lat, position.lng), {
+            draggable: 'true'
+        });
+        map.panTo(new L.LatLng(position.lat, position.lng));
+        document.getElementById('latitude').value = position.lat;
+        document.getElementById('longitude').value = position.lng;
+    });
         </script>
     </x-slot>
 </x-admin-layout>
