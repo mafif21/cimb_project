@@ -216,6 +216,8 @@
                 });
 
                 function focusOn(id) {
+                    var latLng = markers[id].getLatLng();
+                    map.setView(latLng, 18);
                     markers[id].openPopup();
                 }
 
