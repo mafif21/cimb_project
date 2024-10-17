@@ -13,4 +13,11 @@ class LandingController extends Controller
         $categories = Category::orderBy('id')->get();
         return view('landing.index', ['categories' => $categories]);
     }
+
+    public function test()
+    {
+        $categories = Category::orderBy('id')->get();
+        $branches = Branch::all();
+        return view('landing.test', compact("categories", "branches"));
+    }
 }
