@@ -9,8 +9,51 @@
             </div>
         </div>
 
-        <div class="overflow-x-auto shadow-md relative sm:rounded-lg mx-auto">
-            <table class="w-full text-sm text-left text-gray-500 table-fixed">
+        <div class="container">
+        <h1 class="text-2xl font-semibold leading-tight my-6">List Cabang Bank</h1>
+            <x-data-table :headers="['Branch Name', 'Address', 'Phone', 'Days Open', 'Hours Open', 'Latitude', 'Longitude', 'Category', 'Action']">
+            @foreach ($branches as $branch)
+            <tr>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $branch->name }}
+                            </td>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <p class="truncate w-56">{{ $branch->address }}</p>
+                            </td>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $branch->phone }}
+                            </td>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $branch->days_open }}
+                            </td>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $branch->hours_open }}
+                            </td>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $branch->latitude }}
+                            </td>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $branch->longitude }}
+                            </td>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $branch->category->name }}
+                            </td>
+                            <td scope="row" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 sticky-column-right bg-gray-50">
+                            <div class="flex gap-4 items-center">
+                                    <a href="{{ route('admin.branch.edit', 1) }}"
+                                        class="font-medium text-blue-600">Edit</a>
+                                    <form action="{{ route('admin.branch.destroy', 1) }}" method="post"
+                                        onsubmit="return confirm('Are you sure?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="font-medium text-red-600">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+</x-data-table>
+            <!-- <table class="w-full text-sm text-left text-gray-500 table-fixed">
                 <caption class="p-5 text-lg font-semibold text-left text-gray-900 ">
                     Admin Branch Page
                     <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">Halo
@@ -67,7 +110,7 @@
                                 {{ $branch->hours_open }}
                             </th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                                {{ $branch->langitude }}
+                                {{ $branch->latitude }}
                             </th>
                             <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
                                 {{ $branch->longitude }}
@@ -91,7 +134,7 @@
                     @endforeach
 
                 </tbody>
-            </table>
+            </table> -->
         </div>
     </x-slot>
 </x-admin-layout>

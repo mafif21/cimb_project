@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.sticky-column-right {
+    position: sticky;
+    right: 0;
+    background-color: white; /* Pastikan latar belakang tetap terlihat */
+    z-index: 10; /* Agar berada di atas elemen lainnya saat di-scroll */
+    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.1); /* Menambahkan shadow untuk kolom */
+}
