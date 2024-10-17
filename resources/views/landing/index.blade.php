@@ -149,6 +149,7 @@
                             document.getElementById('branches-list').innerHTML = '<p class="text-red-600">Tempat tidak ditemukan</p>';
                         }
                     }).catch((e) => {
+                        displayLoading(false);
                         alert(e.response)
                         console.error(e)
                     });
