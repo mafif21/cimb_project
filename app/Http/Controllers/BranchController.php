@@ -46,7 +46,8 @@ class BranchController extends Controller
 
     public function edit(Branch $branch)
     {
-        return view('admin.branch.edit', compact('branch'));
+        $categories = Category::all();
+        return view('admin.branch.edit', compact('branch', 'categories'));
     }
 
     public function update(BranchUpdateRequest $request, Branch $branch)
