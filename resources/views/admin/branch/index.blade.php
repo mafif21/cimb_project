@@ -5,7 +5,7 @@
         <div class="flex justify-between mb-5 items-center">
             <div>
                 <a href="{{ route('admin.branch.create') }}"
-                    class="text-white bg-[#6e1315] font-medium rounded-lg text-sm px-5 py-2.5">Add Cimb Branch</a>
+                    class="text-white bg-cimb-light font-medium rounded-lg text-sm px-5 py-2.5">Add Cimb Branch</a>
             </div>
         </div>
 

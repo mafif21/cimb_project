@@ -16,9 +16,7 @@
 <body class="font-sans antialiased flex flex-col">
     <div class="min-h-screen bg-white">
         <main>
-            <div>
-                {{ $slot }}
-            </div>
+            {{ $slot }}
         </main>
     </div>
 

@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title ?? config('app.name') }}</title>
+    {{ $additional ?? '' }}
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&display=swap">
 
@@ -84,6 +85,7 @@
         </main>
     </div>
 
+    {{ $scripts ?? '' }}
     <script src="https://unpkg.com/flowbite@1.5.5/dist/flowbite.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

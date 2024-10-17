@@ -15,6 +15,10 @@ export default {
             fontFamily: {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                "cimb-maroon": "#6e1315",
+                "cimb-light": "#da1e25",
+            },
         },
     },
 
