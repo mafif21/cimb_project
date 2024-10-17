@@ -21,8 +21,7 @@
             x-data="{ open: false }">
             <div class="flex flex-row items-center justify-between flex-shrink-0 px-8 py-4">
                 <a href="/admin"
-                    class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg focus:outline-none focus:shadow-outline">Hi
-                    Admin</a>
+                    class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg focus:outline-none focus:shadow-outline">Hi {{auth()->user()->name}}</a>
                 <button class="rounded-lg md:hidden focus:outline-none focus:shadow-outline" @click="open = !open">
                     <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
                         <path x-show="!open" fill-rule="evenodd"
@@ -36,13 +35,16 @@
             </div>
             <nav :class="{ 'block': open, 'hidden': !open }"
                 class="flex-grow px-4 pb-4 md:block md:pb-0 md:overflow-y-auto">
+                <x-admin-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')">
+                    {{ __('Dashboard') }}
+                </x-admin-nav-link>
                 <x-admin-nav-link :href="route('admin.branch.index')" :active="request()->routeIs('admin.branch**')">
                     {{ __('Branch') }}
                 </x-admin-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-admin-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();"
-                    class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+                    >
                         {{ __('Logout') }}
                     </x-admin-nav-link>
                             </form>
