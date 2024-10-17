@@ -60,8 +60,8 @@
                             <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only">Lokasi</label>
                             <select name="category_id" id="category_id" class="w-[150px] rounded-l-md" required>
                                 <option value="Pilih Kategori" disabled>Pilih Kategori</option>
-                                @foreach($categories as $cateogry)
-                                <option value="{{ $cateogry->id }}">{{ $cateogry->name }}</option>
+                                @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
                             <div class="relative w-full">
@@ -165,8 +165,8 @@
                         alert('Kategori tidak boleh kosong')
                         return;
                     }
+                    resetMap();
                     axios.get('{{ route("api.branches") }}', { params: {category_id: category_id, search: search} }).then((resp) => {
-                        resetMap();
                         if (resp.data.data.length > 0) {
                             addMarkersToMap(resp.data.data)
                         } else {
@@ -221,6 +221,7 @@
 
                 function resetMap() {
                     markers = {};
+                    html = '';
                     document.getElementById('branches-list').innerHTML = '';
                     markersLayer.clearLayers();
                 }
