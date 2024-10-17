@@ -19,7 +19,8 @@
 
                 <div id="map" class="h-[150px] mb-8"></div>
 
-                <form method="put" action="{{ route('admin.branch.update', $branch->id) }}">
+                <form method="POST" action="{{ route('admin.branch.update', $branch->id) }}">
+                    @method('PUT')
                     @csrf
                     <div class="grid grid-cols-3 gap-4 mb-4">
                         <div>

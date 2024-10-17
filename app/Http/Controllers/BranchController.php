@@ -52,7 +52,7 @@ class BranchController extends Controller
 
     public function update(Request $request, Branch $branch)
     {
-        ddd($request);
+        // ddd($request);
         $validatedData = $request->validate([
             'name' => 'required|string|min:2|max:100',
             'phone' => 'required|string|max:15',
