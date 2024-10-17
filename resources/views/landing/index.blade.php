@@ -215,6 +215,7 @@
                 }
 
                 function showPosition(position) {
+                    document.getElementById('input-search').value = '';
                     const latitude = position.coords.latitude;
                     const longitude = position.coords.longitude;
                     user_marker = L.marker([latitude, longitude], { icon: blueIcon }).addTo(map);
