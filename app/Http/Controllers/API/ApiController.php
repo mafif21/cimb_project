@@ -55,32 +55,36 @@ class ApiController extends Controller
         ]);
     }
 
-    private function _openAIChat($query)
+    private function _openAIChat($query, $lat, $lang)
     {
         $nearestBranches = [];
-        $serviceContext = "Here are the nearest branches and their services:\n";
-        foreach ($nearestBranches as $branch) {
-            $serviceContext .= "- " . $branch['name'] . " in " . $branch['city'] . " offers: " . implode(', ', $branch['services']) . "\n";
+        $context_msg = [
+            ['role' => 'system', 'content' => 'You are a helpful assistant that helps users find the appropriate CIMB Niaga service based on their query. Here are the services offered by CIMB Niaga: 
+            - ATM: For cash withdrawals, transfers, balance checks, and bill payments, available 24/7.
+            - CDM: For depositing cash directly into your account, available 24/7.
+            - TST: A service available at select branches for both cash withdrawals and deposits, with a faster, tech-enhanced process.
+            - Kantor Cabang: For full-service banking, including account opening, loan applications, and other complex transactions.
+            - Digital Lounge: Self-service banking with advanced technology, video banking, and digital tools.
+            - Kantor Cabang Pembantu: Smaller branch offices providing essential banking services, often in less populated areas.
+            - KIOSK: Self-service terminals for checking balances, transferring funds, and bill payments.
+            - Kantor Cabang Syariah: For banking services based on Islamic principles.
+            - Kantor Fungsional Syariah: Supporting Islamic banking operations.
+            - Kantor Cabang Pembantu Syariah: Smaller branches offering Sharia-compliant banking services.
+            - Weekend Banking: Select branches open on weekends for basic banking services like deposits and withdrawals.'],
+            ['role' => 'user', 'content' => $query],
+        ];
+
+        if(!empty($lat) || !empty($lang)){
+            $serviceContext = "Here are the nearest branches and their services:\n";
+            foreach ($nearestBranches as $branch) {
+                $serviceContext .= "- " . $branch['name'] . " in " . $branch['adress'] . " offers services " . implode(', ', $branch['category_name']) . "\n";
+            }
+            $context_msg = array_merge($context_msg, ['role' => 'system', 'content' => $serviceContext]);
         }
 
         $response = Http::withToken(env('OPENAI_API_KEY'))->post('https://api.openai.com/v1/chat/completions', [
             'model' => 'gpt-4o-mini',
-            'messages' => [
-                ['role' => 'system', 'content' => 'You are a helpful assistant that helps users find the appropriate CIMB Niaga service based on their query. Here are the services offered by CIMB Niaga: 
-                - ATM: For cash withdrawals, transfers, balance checks, and bill payments, available 24/7.
-                - CDM: For depositing cash directly into your account, available 24/7.
-                - TST: A service available at select branches for both cash withdrawals and deposits, with a faster, tech-enhanced process.
-                - Kantor Cabang: For full-service banking, including account opening, loan applications, and other complex transactions.
-                - Digital Lounge: Self-service banking with advanced technology, video banking, and digital tools.
-                - Kantor Cabang Pembantu: Smaller branch offices providing essential banking services, often in less populated areas.
-                - KIOSK: Self-service terminals for checking balances, transferring funds, and bill payments.
-                - Kantor Cabang Syariah: For banking services based on Islamic principles.
-                - Kantor Fungsional Syariah: Supporting Islamic banking operations.
-                - Kantor Cabang Pembantu Syariah: Smaller branches offering Sharia-compliant banking services.
-                - Weekend Banking: Select branches open on weekends for basic banking services like deposits and withdrawals.'],
-                ['role' => 'user', 'content' => $query],
-                ['role' => 'system', 'content' => $serviceContext],
-            ],
+            'messages' => $context_msg,
             'temperature' => 0.5
         ]);
 
