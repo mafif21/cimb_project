@@ -90,12 +90,14 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.1.8/js/dataTables.tailwindcss.js">
     </script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
     <script>
         var canvas = document.getElementById("game");
         var context = canvas.getContext("2d");
 
         var grid = 16;
         var count = 0;
+        var score = 0; // Tambahkan variabel skor
 
         var snake = {
             x: 160,
@@ -123,6 +125,12 @@
 
             count = 0;
             context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+            // Menampilkan skor
+            context.fillStyle = "black";
+            context.font = "16px Arial";
+            context.fillText("Octo Points: " + score, 280, 30); // Posisi skor
 
             snake.x += snake.dx;
             snake.y += snake.dy;
@@ -156,6 +164,7 @@
 
                 if (cell.x === apple.x && cell.y === apple.y) {
                     snake.maxCells++;
+                    score++; // Tambah skor ketika ular memakan apel
                     apple.x = getRandomInt(0, 25) * grid;
                     apple.y = getRandomInt(0, 25) * grid;
                 }
@@ -169,6 +178,7 @@
                         snake.maxCells = 4;
                         snake.dx = grid;
                         snake.dy = 0;
+                        score = 0; // Reset skor
 
                         apple.x = getRandomInt(0, 25) * grid;
                         apple.y = getRandomInt(0, 25) * grid;
@@ -195,6 +205,7 @@
 
         requestAnimationFrame(loop);
     </script>
+
     {{ $scripts ?? '' }}
 
 

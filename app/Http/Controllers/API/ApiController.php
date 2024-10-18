@@ -11,8 +11,8 @@ use Location\Distance\Vincenty;
 
 class ApiController extends Controller
 {
-    public function getBranches(Request $request) 
-    {   
+    public function getBranches(Request $request)
+    {
         if (empty($request->category_id)) {
             return response()->json([
                 'status' => 404,
@@ -20,14 +20,14 @@ class ApiController extends Controller
             ]);
         }
         $branches = Branch::query();
-        
+
         if (!empty($request->category_id)) {
             $branches->where('category_id', $request->category_id);
         }
         if (!empty($request->search)) {
-            $branches->where('name', 'like', '%'.$request->search.'%')
-                ->orWhere('address', 'like', '%'.$request->search.'%')
-                ->orWhere('phone', 'like', '%'.$request->search.'%');
+            $branches->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('address', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%');
         }
 
         $branches = $branches->get();
@@ -36,7 +36,7 @@ class ApiController extends Controller
             $originCordinate = new Coordinate($request->user_lat, $request->user_long);
             $range = 10000;
             $data = [];
-            foreach($branches as $branch) {
+            foreach ($branches as $branch) {
                 $branchCordinate = new Coordinate($branch->latitude, $branch->longitude);
                 $distance = $originCordinate->getDistance($branchCordinate, new Vincenty());
                 if ($distance <= $range) {
