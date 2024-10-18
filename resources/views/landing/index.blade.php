@@ -9,7 +9,7 @@
     </x-slot>
 
     <x-slot name="slot">
-        <div class="grid h-[100vh] md:grid-cols-[2fr_1fr]">
+        <div class="grid h-[100vh] md:grid-cols-[2fr_1fr] overflow-hidden">
             <div class="relative">
                 <div class="absolute top-5 right-10 z-10 hidden md:block">
                     <img src="{{ asset('images/cimb.png') }}" class="w-[200px] ml-7">
@@ -43,8 +43,8 @@
                             </div>
                         </form>
 
-                        <div class="w-1/2 mt-4 pointer-events-auto">
-                            <div class="rounded-lg border-md h-[600px] overflow-y-auto h-full w-full " id="branches-list">
+                        <div class="w-1/2 mt-4 pointer-events-auto h-screen">
+                            <div class="rounded-lg border-md overflow-y-auto h-[70vh] w-full scroll-smooth simple-scroll pb-4" id="branches-list">
                             </div>
                         </div>
                     </div>
