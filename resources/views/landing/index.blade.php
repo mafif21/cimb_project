@@ -220,7 +220,7 @@
                     <p class="font-normal text-gray-700 text-xs mb-1">${branch.address}
                     </p>
                     <p class="font-normal text-gray-700 text-xs mb-1">Hari: ${branch.days_open}</p>
-                    <p class="font-normal text-gray-700 text-xs mb-1">Jam Buka: ${branch.days_open}</p>
+                    <p class="font-normal text-gray-700 text-xs mb-1">Jam Buka: ${branch.hours_open}</p>
                     <br>
                     <a href="#" onclick="focusOn(${branch.id})" class="inline-flex items-center px-2 py-1 text-xs font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300">
                         Lihat Lokasi
@@ -301,7 +301,7 @@
                     navigator.geolocation.getCurrentPosition((position) => {
                         const latitude = position.coords.latitude;
                         const longitude = position.coords.longitude;
-
+                        displayLoading(true);
                         axios.post('{{ route('api.askbot') }}', {
                             ask_query: input,
                             lat: latitude,
