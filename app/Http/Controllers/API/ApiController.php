@@ -40,6 +40,7 @@ class ApiController extends Controller
                 $branchCordinate = new Coordinate($branch->latitude, $branch->longitude);
                 $distance = $originCordinate->getDistance($branchCordinate, new Vincenty());
                 if ($distance <= $range) {
+                    $branch->distance = $distance / 1000;
                     $data[] = $branch;
                 }
             }

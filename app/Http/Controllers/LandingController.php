@@ -17,7 +17,7 @@ class LandingController extends Controller
     public function test()
     {
         $categories = Category::orderBy('id')->get();
-        $branches = Branch::all();
+        $branches = Branch::with('category')->limit(5);
         return view('landing.test', compact("categories", "branches"));
     }
 }
