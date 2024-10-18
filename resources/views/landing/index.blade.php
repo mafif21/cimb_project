@@ -46,7 +46,7 @@
                                 </div>
                             </form>
                             <button type="button" id="btn-search-location"
-                                class="px-[4px] ms-2 text-sm font-medium text-white bg-cimb-light rounded-lg border border-cimb-light hover:bg-cimb-maroon focus:ring-4 focus:outline-none focus:ring-cimb-maroon">
+                                class="px-[4px] ms-2 pointer-events-auto text-sm font-medium text-white bg-cimb-light rounded-lg border border-cimb-light hover:bg-cimb-maroon focus:ring-4 focus:outline-none focus:ring-cimb-maroon">
                                 <img src="{{ asset('images/location.svg') }}" alt="location" width="40">
                             </button>
                         </div>
@@ -297,9 +297,9 @@
                 searchLocation();
             })
 
-            // document.getElementById('btn-search-location').addEventListener('click', () => {
-            //     getLocationUser();
-            // });
+            document.getElementById('btn-search-location').addEventListener('click', () => {
+                getLocationUser();
+            });
 
             document.getElementById('form-ai').addEventListener('submit', (e) => {
                 e.preventDefault();
