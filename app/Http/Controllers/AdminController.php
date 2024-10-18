@@ -9,7 +9,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        
+
         $data = [
             'totalUsers' => 1520,
             'totalOrders' => 350,

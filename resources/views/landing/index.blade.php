@@ -9,7 +9,7 @@
     </x-slot>
 
     <x-slot name="slot">
-        <div class="grid h-[100vh] md:grid-cols-[2fr_1fr]">
+        <div class="grid h-[100vh] md:grid-cols-[2fr_1fr] overflow-hidden">
             <div class="relative">
                 <div class="absolute top-5 right-10 z-10 hidden md:block">
                     <img src="{{ asset('images/cimb.png') }}" class="w-[200px] ml-7">
@@ -43,8 +43,8 @@
                             </div>
                         </form>
 
-                        <div class="w-1/2 mt-4 pointer-events-auto">
-                            <div class="rounded-lg border-md h-[600px] overflow-y-auto h-full w-full " id="branches-list">
+                        <div class="w-1/2 mt-4 pointer-events-auto h-screen">
+                            <div class="rounded-lg border-md overflow-y-auto h-[70vh] w-full scroll-smooth simple-scroll pb-4" id="branches-list">
                             </div>
                         </div>
                     </div>
@@ -118,11 +118,13 @@
 
                 <!-- Input box  -->
                 <div class="flex items-center mb-2">
-                    <form class="flex items-center justify-center w-full space-x-2">
+                    <form class="flex items-center justify-center w-full space-x-2" id="form-ai">
                         <input
+                            id="input-ai"
                             class="flex h-10 w-full rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af] disabled:cursor-not-allowed disabled:opacity-50 text-[#030712] focus-visible:ring-offset-2"
                             placeholder="Type your message" value="">
                         <button
+                            id="btn-ai"
                             class="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-black hover:bg-[#111827E6] h-10 px-4 py-2">
                             Send</button>
                     </form>
@@ -166,7 +168,6 @@
                 const locationCoords = [];
                 for (const i in branches) {
                     const branch = branches[i];
-                    console.log(branch)
                     const destLat = branch.latitude;
                     const destLong = branch.longitude;
                     locationCoords.push([destLat, destLong]);
@@ -289,13 +290,53 @@
                 searchLocation();
             })
 
-            document.getElementById('btn-search-location').addEventListener('click', () => {
-                getLocationUser();
+            // document.getElementById('btn-search-location').addEventListener('click', () => {
+            //     getLocationUser();
+            // });
+
+            document.getElementById('form-ai').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const input = document.getElementById('input-ai').value;
+                if (input == '') return;
+
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+
+                        console.log(input, latitude, longitude)
+                    }, showError);
+                } else {
+                    console.error("Geolocation is not supported by this browser.");
+                }
+
+                return;
+
+                axios.get('{{ route('api.branches') }}', {
+                    params: {
+                        
+                        user_lat: user_lat,
+                        user_long: user_long
+                    }
+                }).then((resp) => {
+                    if (resp.data.data.length > 0) {
+                        addMarkersToMap(resp.data.data)
+                    } else if (!init) {
+                        document.getElementById('branches-list').innerHTML =
+                            '<p class="text-red-600">Tempat tidak ditemukan</p>';
+                    }
+                }).catch((e) => {
+                    displayLoading(false);
+                    alert(e.response)
+                    console.error(e)
+                }).finally((e) => {
+                    displayLoading(false);
+                });
             });
 
             function focusOn(id) {
                 var latLng = markers[id].getLatLng();
-                console.log(latLng);
                 map.setView([latLng.lat, latLng.lng - 0.001], 18);
                 markers[id].openPopup();
             }
