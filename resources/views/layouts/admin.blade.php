@@ -9,8 +9,14 @@
     <title>{{ $title ?? config('app.name') }}</title>
     {{ $additional ?? '' }}
 
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&display=swap">
-    
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -21,7 +27,8 @@
             x-data="{ open: false }">
             <div class="flex flex-row items-center justify-between flex-shrink-0 px-8 py-4">
                 <a href="/admin"
-                    class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg focus:outline-none focus:shadow-outline">Hi {{auth()->user()->name}}</a>
+                    class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg focus:outline-none focus:shadow-outline">Hi
+                    {{ auth()->user()->name }}</a>
                 <button class="rounded-lg md:hidden focus:outline-none focus:shadow-outline" @click="open = !open">
                     <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
                         <path x-show="!open" fill-rule="evenodd"
@@ -41,19 +48,33 @@
                 <x-admin-nav-link :href="route('admin.branch.index')" :active="request()->routeIs('admin.branch**')">
                     {{ __('Branch') }}
                 </x-admin-nav-link>
+                <x-admin-nav-link :href="route('admin.wibs.index')" :active="request()->routeIs('admin.wibs**')">
+                    {{ __('WIBS') }}
+                </x-admin-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <x-admin-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();"
-                    >
+                    <x-admin-nav-link :href="route('logout')"
+                        onclick="event.preventDefault(); this.closest('form').submit();">
                         {{ __('Logout') }}
                     </x-admin-nav-link>
-                            </form>
+                </form>
 
             </nav>
         </div>
 
         <main class="m-2 p-8 w-full">
             <x-container>
+                <div class="mb-5">
+                    @if (session()->has('success'))
+                        <x-success-alert statusText="{{ session()->get('success') }}"></x-success-alert>
+                    @endif
+                    @if (session()->has('primary'))
+                        <x-primary-alert statusText="{{ session()->get('primary') }}"></x-primary-alert>
+                    @endif
+                    @if (session()->has('danger'))
+                        <x-danger-alert statusText="{{ session()->get('danger') }}"></x-danger-alert>
+                    @endif
+                </div>
                 <div>
                     {{ $slot }}
                 </div>
@@ -63,13 +84,117 @@
 
     <script src="https://unpkg.com/flowbite@1.5.5/dist/flowbite.js"></script>
     <!-- <script src="{{ asset('js/app.js') }}"></script> -->
-    <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- DataTables -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.tailwindcss.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.1.8/js/dataTables.tailwindcss.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.tailwindcss.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/2.1.8/js/dataTables.tailwindcss.js">
+    </script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script>
+        var canvas = document.getElementById("game");
+        var context = canvas.getContext("2d");
+
+        var grid = 16;
+        var count = 0;
+
+        var snake = {
+            x: 160,
+            y: 160,
+            dx: grid,
+            dy: 0,
+            cells: [],
+            maxCells: 4,
+        };
+        var apple = {
+            x: 320,
+            y: 320,
+        };
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function loop() {
+            requestAnimationFrame(loop);
+
+            if (++count < 4) {
+                return;
+            }
+
+            count = 0;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            snake.x += snake.dx;
+            snake.y += snake.dy;
+
+            if (snake.x < 0) {
+                snake.x = canvas.width - grid;
+            } else if (snake.x >= canvas.width) {
+                snake.x = 0;
+            }
+
+            if (snake.y < 0) {
+                snake.y = canvas.height - grid;
+            } else if (snake.y >= canvas.height) {
+                snake.y = 0;
+            }
+
+            snake.cells.unshift({
+                x: snake.x,
+                y: snake.y
+            });
+
+            if (snake.cells.length > snake.maxCells) {
+                snake.cells.pop();
+            }
+
+            context.fillStyle = "red";
+            context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+            context.fillStyle = "green";
+            snake.cells.forEach(function(cell, index) {
+                context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+                if (cell.x === apple.x && cell.y === apple.y) {
+                    snake.maxCells++;
+                    apple.x = getRandomInt(0, 25) * grid;
+                    apple.y = getRandomInt(0, 25) * grid;
+                }
+
+                for (var i = index + 1; i < snake.cells.length; i++) {
+                    // snake occupies same space as a body part. reset game
+                    if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+                        snake.x = 160;
+                        snake.y = 160;
+                        snake.cells = [];
+                        snake.maxCells = 4;
+                        snake.dx = grid;
+                        snake.dy = 0;
+
+                        apple.x = getRandomInt(0, 25) * grid;
+                        apple.y = getRandomInt(0, 25) * grid;
+                    }
+                }
+            });
+        }
+
+        document.addEventListener("keydown", function(e) {
+            if (e.which === 37 && snake.dx === 0) {
+                snake.dx = -grid;
+                snake.dy = 0;
+            } else if (e.which === 38 && snake.dy === 0) {
+                snake.dy = -grid;
+                snake.dx = 0;
+            } else if (e.which === 39 && snake.dx === 0) {
+                snake.dx = grid;
+                snake.dy = 0;
+            } else if (e.which === 40 && snake.dy === 0) {
+                snake.dy = grid;
+                snake.dx = 0;
+            }
+        });
+
+        requestAnimationFrame(loop);
+    </script>
     {{ $scripts ?? '' }}
 
 

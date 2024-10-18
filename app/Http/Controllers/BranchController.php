@@ -52,7 +52,6 @@ class BranchController extends Controller
 
     public function update(Request $request, Branch $branch)
     {
-        // ddd($request);
         $validatedData = $request->validate([
             'name' => 'required|string|min:2|max:100',
             'phone' => 'required|string|max:15',
@@ -65,12 +64,12 @@ class BranchController extends Controller
         ]);
 
         $branch->update($validatedData);
-        return redirect()->route('admin.branch.index')->with('success', 'Cabang berhasil diperbarui.');
+        return redirect()->route('admin.branch.index')->with('primary', 'Cabang berhasil diperbarui.');
     }
 
     public function destroy(Branch $branch)
     {
         $branch->delete();
-        return redirect()->route('admin.branch.index')->with('success', 'Cabang berhasil dihapus.');
+        return redirect()->route('admin.branch.index')->with('danger', 'Cabang berhasil dihapus.');
     }
 }

@@ -13,6 +13,9 @@ Route::get('/test', [LandingController::class, 'test'])->name('test');
 Route::middleware('auth')->name('admin.')->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
     Route::resource('branch', BranchController::class);
+    Route::get('/wibs', function () {
+        return view('admin.wibs.index');
+    })->name('wibs.index');
 });
 
 require __DIR__ . '/auth.php';
