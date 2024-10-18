@@ -14,7 +14,7 @@
                 <div class="absolute top-5 right-10 z-10 hidden md:block">
                     <img src="{{ asset('images/cimb.png') }}" class="w-[200px] ml-7">
                 </div>
-                <div class="absolute inset-0 top-32 z-10 w-full px-[8rem] pointer-events-none">
+                <div class="absolute inset-0 top-3 md:top-32 z-10 w-full px-[3rem] md:px-[8rem] pointer-events-none">
                     <div>
                         <div class="flex">
                             <form class="w-full mx-auto pointer-events-auto" id="form-search">
@@ -51,14 +51,14 @@
                             </button>
                         </div>
 
-                        <div class="w-1/2 mt-4 pointer-events-auto h-screen">
-                            <div class="rounded-lg overflow-hidden border-md overflow-y-auto h-[70vh] w-full scroll-smooth simple-scroll pb-4"
+                        <div class="hidden md:block md:w-1/2 mt-4 pointer-events-auto h-screen">
+                            <div class="rounded-lg overflow-hidden border-md overflow-y-auto h-[215px] md:h-[70vh] w-full scroll-smooth simple-scroll pb-4"
                                 id="branches-list">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="map" class="h-[100vh] relative z-0"></div>
+                <div id="map" class="h-[50vh] md:h-[100vh] relative z-0"></div>
             </div>
 
             <div style="box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);"
@@ -70,7 +70,7 @@
                         <p class="text-sm text-[#6b7280] leading-3">Halo, ada yang bisa mimbot bantu👋</p>
                     </div>
                     <!-- Chat Container -->
-                    <div class="pr-4 h-[70vh] scroll-smooth simple-scroll overflow-y-auto " style="min-width: 100%;" id="chat-ai-container">
+                    <div class="pr-4 h-[225px] md:h-[70vh] scroll-smooth simple-scroll overflow-y-auto " style="min-width: 100%;" id="chat-ai-container">
                     
                     </div>
                 </div>
@@ -212,7 +212,7 @@
 
             function generateList(branch) {
                 const html = `<div
-                    class="block mb-2 max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-white-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100">
+                    class="block mb-2 md:max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-white-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100">
 
                     <h5 class="mb-2 text-md font-bold tracking-tight text-gray-900 dark:text-white">
                         ${branch.name}</h5>
@@ -289,6 +289,7 @@
 
             document.getElementById('form-ai').addEventListener('submit', (e) => {
                 e.preventDefault();
+                
                 document.getElementById('chat-ai-container').innerHTML = '';
                 const input = document.getElementById('input-ai').value;
                 if (input == '') return;
@@ -296,7 +297,6 @@
                 let html = '';
                 aiContainer.insertAdjacentHTML('beforeend', generateChatHTML('user', input));
                 document.getElementById('input-ai').value = '';
-                
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition((position) => {
                         const latitude = position.coords.latitude;
