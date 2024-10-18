@@ -233,6 +233,8 @@
                     displayLoading(false);
                     alert(e.response)
                     console.error(e)
+                }).finally(() => {
+                    displayLoading(false);
                 });
 
             }
