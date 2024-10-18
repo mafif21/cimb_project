@@ -245,6 +245,8 @@
                     displayLoading(false);
                     alert(e.response)
                     console.error(e)
+                }).finally(() => {
+                    displayLoading(false);
                 });
 
             }
@@ -293,7 +295,8 @@
 
             function focusOn(id) {
                 var latLng = markers[id].getLatLng();
-                map.setView(latLng, 18);
+                console.log(latLng);
+                map.setView([latLng.lat, latLng.lng - 0.001], 18);
                 markers[id].openPopup();
             }
 
