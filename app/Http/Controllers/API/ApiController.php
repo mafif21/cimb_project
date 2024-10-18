@@ -25,9 +25,10 @@ class ApiController extends Controller
             $branches->where('category_id', $request->category_id);
         }
         if (!empty($request->search)) {
-            $branches->where('name', 'like', '%'.$request->search.'%')
-                ->orWhere('address', 'like', '%'.$request->search.'%')
-                ->orWhere('phone', 'like', '%'.$request->search.'%');
+            $search = strtolower($request->search); // Ubah input pencarian menjadi huruf kecil
+            $branches->whereRaw('LOWER(name) like ?', ['%'.$search.'%'])
+                ->orWhereRaw('LOWER(address) like ?', ['%'.$search.'%'])
+                ->orWhereRaw('LOWER(phone) like ?', ['%'.$search.'%']);
         }
 
         $branches = $branches->get();
