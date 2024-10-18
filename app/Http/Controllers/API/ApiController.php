@@ -87,6 +87,19 @@ class ApiController extends Controller
         ]);
     }
 
+    private function _cityUserSearch($query){
+        $response = \Http::withToken(env('OPENAI_API_KEY'))->post('https://api.openai.com/v1/chat/completions', [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                ['role' => 'system', 'content' => 'You are a system middleware that is useful for getting keywords in the form of cities from user input. The result of your work is only the city name. If there is no city name listed by the user, then return the value -.'],
+                ['role' => 'user', 'content' => $query]
+            ],
+            'temperature' => 0.5
+        ]);
+        $aiProcessedQuery = $response->json('choices')[0]['message']['content'];
+        return $aiProcessedQuery;
+    }
+
     private function _openAIChat($query, $lat, $long)
     {
         $nearestBranches = [];
@@ -104,7 +117,10 @@ class ApiController extends Controller
             - Kantor Cabang Pembantu Syariah: Smaller branches offering Sharia-compliant banking services.
             - Weekend Banking: Select branches open on weekends for basic banking services like deposits and withdrawals.'],
             ['role' => 'user', 'content' => $query],
+            ['role' => 'system', 'content' => 'As a smart assistant, you need to answer customer questions specifically and based on data. In addition, you also need to adjust the language issued with the language inputted by the user.']
         ];
+
+        $cityName = $this->_cityUserSearch($query);
 
         if(!empty($lat) || !empty($long)){
             $request = new Request([
@@ -128,7 +144,7 @@ class ApiController extends Controller
 
         $aiProcessedQuery = $response->json('choices')[0]['message']['content'];
         $data = [
-            'aiGenerated' => $aiProcessedQuery,
+            'aiGenerated' => nl2br($aiProcessedQuery),
             'nearestBranches' => $nearestBranches,
         ];
 
