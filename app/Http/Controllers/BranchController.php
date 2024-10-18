@@ -7,14 +7,35 @@ use App\Http\Requests\BranchUpdateRequest;
 use App\Models\Branch;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class BranchController extends Controller
 {
-    public function index()
-    {
-        $branches = Branch::all();
-        return view('admin.branch.index', compact('branches'));
+    public function index(Request $request)
+{
+    if ($request->ajax()) {
+        $branches = Branch::with('category')->select('branches.*');
+        return DataTables::of($branches)
+            ->addColumn('action', function($row){
+                return '<a href="'.route('admin.branch.show', $row->id).'" class="font-medium text-blue-600">Detail</a>';
+            })
+            ->make(true);
     }
+
+    $headers = [
+        'Branch Name',
+        'Address',
+        'Phone',
+        'Days Open',
+        'Hours Open',
+        'Latitude',
+        'Longitude',
+        'Category',
+        'Action',
+    ];
+
+    return view('admin.branch.index', compact('headers'));
+}
 
     public function create()
     {
