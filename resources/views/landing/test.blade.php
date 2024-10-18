@@ -12,7 +12,7 @@
         <div class="grid h-[100vh] md:grid-cols-[2fr_1fr]">
             <div class="relative">
                 <div class="absolute top-5 right-10 z-10">
-                    <img src="{{ asset('images/cimb.png') }}" alt="" class="w-[200px] ml-7">
+                    <img src="{{ asset('images/cimb.png') }}" class="w-[200px] ml-7">
                 </div>
                 <div class="absolute inset-0 top-32 z-10 w-full px-[8rem] pointer-events-none">
                     <div>
@@ -44,14 +44,12 @@
                         </form>
 
                         <div class="w-1/2 mt-4 pointer-events-auto">
-                            <div class="rounded-lg border-md h-[600px] overflow-y-auto h-full w-full ">
+                            <div class="rounded-lg border-md h-[600px] overflow-y-auto w-full ">
                                 @foreach ($branches as $branch)
                                     <a href="#"
                                         class="block mb-2 max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-white-400 rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100">
-
                                         <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
                                             {{ $branch->name }}</h5>
-
                                         <p class="font-normal text-gray-700 text-sm">{{ $branch->address }}
                                         </p>
                                         <span
@@ -59,7 +57,6 @@
                                     </a>
                                 @endforeach
                             </div>
-
                         </div>
                     </div>
                 </div>
