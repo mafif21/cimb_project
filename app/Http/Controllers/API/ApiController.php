@@ -13,7 +13,7 @@ class ApiController extends Controller
 {
     public function getBranches(Request $request)
     {
-        if (empty($request->category_id)) {
+        if (empty($request->category_id) && !empty($request->search)) {
             return response()->json([
                 'status' => 404,
                 'message' => 'Kategori tidak boleh kosong.',
@@ -23,6 +23,7 @@ class ApiController extends Controller
 
         $branches->select('branches.*', 'categories.name as category_name');
         $branches->leftJoin('categories', 'branches.category_id', '=', 'categories.id');
+        $branches->where('latitude', '>=', -90)->where('latitude', '<=', 90);
         
         if (!empty($request->category_id)) {
             $branches->where('category_id', $request->category_id);
@@ -52,6 +53,31 @@ class ApiController extends Controller
                 }
             }
             $branches = $data;
+
+            usort($branches, function($a, $b) {
+                return $a['distance'] <=> $b['distance'];
+            });
+        }
+
+        if($request->ai){
+            $numPerCat = 5;
+            $filteredData = [];
+            $categoryCount = [];
+
+            foreach ($data as $entry) {
+                $category = $entry['category_name'];
+
+                if (!isset($categoryCount[$category])) {
+                    $categoryCount[$category] = 0;
+                }
+
+                if ($categoryCount[$category] < $numPerCat) {
+                    $filteredData[] = $entry;
+                    $categoryCount[$category]++;
+                }
+            }
+
+            return $filteredData;
         }
 
         return response()->json([
@@ -81,11 +107,17 @@ class ApiController extends Controller
         ];
 
         if(!empty($lat) || !empty($long)){
+            $request = new Request([
+                'user_lat' => $lat,
+                'user_long' => $long,
+                'ai' => true,
+            ]);
+            $nearestBranches = $this->getBranches($request);
             $serviceContext = "Here are the nearest branches and their services:\n";
             foreach ($nearestBranches as $branch) {
-                $serviceContext .= "- " . $branch['name'] . " in " . $branch['adress'] . " offers services " . implode(', ', $branch['category_name']) . "\n";
+                $serviceContext .= "- " . $branch->name . " branch is located in " . $branch->address .  " providing services as a " . $branch->category_name . ", and is " . $branch->distance . " away." . "\n";
             }
-            $context_msg = array_merge($context_msg, ['role' => 'system', 'content' => $serviceContext]);
+            $context_msg = array_merge($context_msg, [['role' => 'system', 'content' => $serviceContext]]);
         }
 
         $response = \Http::withToken(env('OPENAI_API_KEY'))->post('https://api.openai.com/v1/chat/completions', [
@@ -108,8 +140,6 @@ class ApiController extends Controller
         try {
         $request->validate([
             'ask_query' => 'required|string',
-            'lat' => 'required',
-            'long' => 'required'
         ]);
 
         $query = $request->input('ask_query');
