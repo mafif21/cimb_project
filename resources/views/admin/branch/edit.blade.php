@@ -10,7 +10,11 @@
     <x-slot name="slot">
         <div class="grid justify-items-center">
             <div class="border border-gray-200 shadow-md w-9/12 p-10 rounded-lg">
-                <div class="mb-6">
+                <a href="{{ route('admin.branch.show', $branch->id) }}"
+                    class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-blue-700 hover:text-white focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">Back
+                    To Menu</a>
+
+                <div class="mb-6 mt-6">
                     <h1 class="font-semibold text-xl mb-1 text-slate-900">Edit Branch</h1>
                     <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">Halo
                         {{ auth()->user()->name }} silahkan ubah data cabang kantor CimbNiaga
@@ -143,18 +147,18 @@
             //         .openOn(map);
             // });
 
-            
+
             var redIcon = L.icon({
                 iconUrl: '{{ asset('images/663342.png') }}',
                 iconSize: [41, 41],
                 shadowSize: [41, 41]
             });
-            
+
             var marker = new L.marker([lat, long], {
                 icon: redIcon,
                 draggable: true,
             }).addTo(map);
-            
+
             map.on('click', function(e) {
                 var position = e.latlng;
                 marker.setLatLng(new L.LatLng(position.lat, position.lng), {
