@@ -71,7 +71,7 @@
             <!-- Products Sold Card -->
             <div class="p-4 bg-white rounded-lg shadow-md">
                 <h3 class="text-sm font-medium text-gray-500">Total Weekend Banking</h3>
-                <p class="mt-3x text-xl font-semibold text-gray-900">{{ $data['totalWeekendBanking'] }}</p>
+                <p class="mt-3 text-xl font-semibold text-gray-900">{{ $data['totalWeekendBanking'] }}</p>
             </div>
 
         </div>
