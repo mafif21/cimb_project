@@ -21,14 +21,20 @@ class ApiController extends Controller
         }
         $branches = Branch::query();
 
+        $branches->select('branches.*', 'categories.name as category_name');
+        $branches->leftJoin('categories', 'branches.category_id', '=', 'categories.id');
+        
         if (!empty($request->category_id)) {
             $branches->where('category_id', $request->category_id);
         }
         if (!empty($request->search)) {
             $search = strtolower($request->search); // Ubah input pencarian menjadi huruf kecil
-            $branches->whereRaw('LOWER(name) like ?', ['%'.$search.'%'])
-                ->orWhereRaw('LOWER(address) like ?', ['%'.$search.'%'])
-                ->orWhereRaw('LOWER(phone) like ?', ['%'.$search.'%']);
+
+            $branches->where(function($query) use ($search) {
+                $query->whereRaw('LOWER(branches.name) like ?', ['%'.$search.'%'])
+                    ->orWhereRaw('LOWER(branches.address) like ?', ['%'.$search.'%'])
+                    ->orWhereRaw('LOWER(branches.phone) like ?', ['%'.$search.'%']);
+            });
         }
 
         $branches = $branches->get();
@@ -55,7 +61,7 @@ class ApiController extends Controller
         ]);
     }
 
-    private function _openAIChat($query, $lat, $lang)
+    private function _openAIChat($query, $lat, $long)
     {
         $nearestBranches = [];
         $context_msg = [
@@ -74,7 +80,7 @@ class ApiController extends Controller
             ['role' => 'user', 'content' => $query],
         ];
 
-        if(!empty($lat) || !empty($lang)){
+        if(!empty($lat) || !empty($long)){
             $serviceContext = "Here are the nearest branches and their services:\n";
             foreach ($nearestBranches as $branch) {
                 $serviceContext .= "- " . $branch['name'] . " in " . $branch['adress'] . " offers services " . implode(', ', $branch['category_name']) . "\n";
@@ -82,7 +88,7 @@ class ApiController extends Controller
             $context_msg = array_merge($context_msg, ['role' => 'system', 'content' => $serviceContext]);
         }
 
-        $response = Http::withToken(env('OPENAI_API_KEY'))->post('https://api.openai.com/v1/chat/completions', [
+        $response = \Http::withToken(env('OPENAI_API_KEY'))->post('https://api.openai.com/v1/chat/completions', [
             'model' => 'gpt-4o-mini',
             'messages' => $context_msg,
             'temperature' => 0.5
@@ -103,12 +109,12 @@ class ApiController extends Controller
         $request->validate([
             'ask_query' => 'required|string',
             'lat' => 'required',
-            'lang' => 'required'
+            'long' => 'required'
         ]);
 
         $query = $request->input('ask_query');
 
-        $res = $this->_openAIChat($query);
+        $res = $this->_openAIChat($query, $request->lat, $request->long);
 
         return response()->json([
             'status' => 200,

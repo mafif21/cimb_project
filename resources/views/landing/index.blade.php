@@ -312,34 +312,25 @@
                         const latitude = position.coords.latitude;
                         const longitude = position.coords.longitude;
 
-                        console.log(input, latitude, longitude)
+                        axios.get('{{ route('api.askbot') }}', {
+                            params: {
+                                ask_query: input,
+                                lat: latitude,
+                                long: longitude,
+                            }
+                        }).then((resp) => {
+                            console.log(resp.data)
+                        }).catch((e) => {
+                            displayLoading(false);
+                            alert(e.response)
+                            console.error(e)
+                        }).finally((e) => {
+                            displayLoading(false);
+                        });
                     }, showError);
                 } else {
                     console.error("Geolocation is not supported by this browser.");
                 }
-
-                return;
-
-                axios.get('{{ route('api.branches') }}', {
-                    params: {
-
-                        user_lat: user_lat,
-                        user_long: user_long
-                    }
-                }).then((resp) => {
-                    if (resp.data.data.length > 0) {
-                        addMarkersToMap(resp.data.data)
-                    } else if (!init) {
-                        document.getElementById('branches-list').innerHTML =
-                            '<p class="text-red-600">Tempat tidak ditemukan</p>';
-                    }
-                }).catch((e) => {
-                    displayLoading(false);
-                    alert(e.response)
-                    console.error(e)
-                }).finally((e) => {
-                    displayLoading(false);
-                });
             });
 
             function focusOn(id) {
